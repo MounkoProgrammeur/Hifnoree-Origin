@@ -1,12 +1,14 @@
-#!/bin/bash 
+#!/bin/bash
+set -e
 
-# Compilation du projet 
-echo  "Compilation du projet..."
- python3.9 -m pip install -r requirements.txt 
+echo "✅ Installation de pip et des dépendances Python..."
+python3 -m ensurepip --upgrade || true
+python3 -m pip install --upgrade pip
+python3 -m pip install -r requirements.txt
 
-echo  "Création des migrations..."
- python3.9 manage.py makemigrations --noinput 
-python3.9 manage.py migrate --noinput 
+echo "✅ Application des migrations..."
+python3 manage.py makemigrations --noinput || true
+python3 manage.py migrate --noinput || true
 
-echo  "Collecte des dépendances statiques..."
- python3.9 manage.py collectstatic --noinput --clear
+echo "✅ Collecte des fichiers statiques..."
+python3 manage.py collectstatic --noinput --clear
