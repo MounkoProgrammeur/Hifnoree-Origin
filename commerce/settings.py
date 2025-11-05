@@ -3,24 +3,24 @@ import os
 import dj_database_url
 from dotenv import load_dotenv
 
+# ----------------------
 # Base directory
+# ----------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Charger le fichier .env
 load_dotenv(os.path.join(BASE_DIR, '.env'))
 
-# ===========================
-# 🔐 Sécurité et configuration
-# ===========================
+# ----------------------
+# Sécurité
+# ----------------------
 SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
+DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.vercel.app']
 
-DEBUG = os.environ.get('DEBUG', 'False').lower() == 'true'
-
-ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1', 'localhost']
-
-# ===========================
-# 📦 Applications
-# ===========================
+# ----------------------
+# Applications
+# ----------------------
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -31,9 +31,9 @@ INSTALLED_APPS = [
     'shop',
 ]
 
-# ===========================
-# ⚙️ Middleware
-# ===========================
+# ----------------------
+# Middleware
+# ----------------------
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -46,9 +46,9 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'commerce.urls'
 
-# ===========================
-# 🎨 Templates
-# ===========================
+# ----------------------
+# Templates
+# ----------------------
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -67,24 +67,33 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'commerce.wsgi.application'
 
-# ===========================
-# 🗄️ Base de données Supabase
-# ===========================
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT'),
+# ----------------------
+# Base de données
+# ----------------------
+if DEBUG:
+    # Local -> SQLite
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    # Production -> Supabase PostgreSQL
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': os.environ.get('DB_NAME'),       # ex: 'postgres'
+            'USER': os.environ.get('DB_USER'),       # ex: 'postgres.xxx'
+            'PASSWORD': os.environ.get('DB_PASSWORD'),
+            'HOST': os.environ.get('DB_HOST'),       # ex: 'aws-1-eu-west-1.pooler.supabase.com'
+            'PORT': os.environ.get('DB_PORT', 5432),
+        }
+    }
 
-
-# ===========================
-# 🔑 Validation des mots de passe
-# ===========================
+# ----------------------
+# Validation des mots de passe
+# ----------------------
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator'},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator'},
@@ -92,22 +101,20 @@ AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator'},
 ]
 
-# ===========================
-# 🌍 Internationalisation
-# ===========================
+# ----------------------
+# Internationalisation
+# ----------------------
 LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'Africa/Douala'
 USE_I18N = True
 USE_TZ = True
 
-# ===========================
-# 🖼️ Fichiers statiques
-# ===========================
+# ----------------------
+# Fichiers statiques
+# ----------------------
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
 STATIC_ROOT = BASE_DIR / 'staticfiles_build'
-
-
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
