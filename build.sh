@@ -1,16 +1,12 @@
-#!/bin/bash
-set -e
+pip cache purge
 
-echo "✅ Installation de pip et mise à jour..."
-python3 -m ensurepip --upgrade || true
-python3 -m pip install --upgrade pip setuptools wheel
+pip install --upgrade setuptools
+# install all deps in the venv
+pip install -r requirements.txt
 
-echo "✅ Installation des dépendances Python..."
-python3 -m pip install -r requirements.txt
 
-echo "✅ Application des migrations..."
-python3 manage.py makemigrations --noinput || true
-python3 manage.py migrate --noinput || true
+python manage.py makemigrations
+python manage.py migrate
+python manage.py collectstatic --noinput 
 
-echo "✅ Collecte des fichiers statiques..."
-python3 manage.py collectstatic --noinput --clear
+
