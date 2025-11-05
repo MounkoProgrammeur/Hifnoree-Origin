@@ -2,6 +2,7 @@ from pathlib import Path
 import os
 import dj_database_url
 from dotenv import load_dotenv
+from urllib.parse import urlparse
 
 # ----------------------
 # Base directory
@@ -14,9 +15,10 @@ load_dotenv(os.path.join(BASE_DIR, '.env'))
 # ----------------------
 # Sécurité
 # ----------------------
-SECRET_KEY = os.environ.get('SECRET_KEY', 'dev-secret-key')
+SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG', 'True').lower() == 'true'
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '.vercel.app']
+
+ALLOWED_HOSTS = ['*']
 
 # ----------------------
 # Applications
