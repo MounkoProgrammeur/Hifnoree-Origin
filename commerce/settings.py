@@ -72,26 +72,18 @@ WSGI_APPLICATION = 'commerce.wsgi.application'
 # ----------------------
 # Base de données
 # ----------------------
-if DEBUG:
-    # Local -> SQLite
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': BASE_DIR / 'db.sqlite3',
-        }
+
+# Production -> Supabase PostgreSQL
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.environ.get('DB_NAME'),       # ex: 'postgres'
+        'USER': os.environ.get('DB_USER'),       # ex: 'postgres.xxx'
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST': os.environ.get('DB_HOST'),       # ex: 'aws-1-eu-west-1.pooler.supabase.com'
+        'PORT': os.environ.get('DB_PORT', 5432),
     }
-else:
-    # Production -> Supabase PostgreSQL
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.postgresql',
-            'NAME': os.environ.get('DB_NAME'),       # ex: 'postgres'
-            'USER': os.environ.get('DB_USER'),       # ex: 'postgres.xxx'
-            'PASSWORD': os.environ.get('DB_PASSWORD'),
-            'HOST': os.environ.get('DB_HOST'),       # ex: 'aws-1-eu-west-1.pooler.supabase.com'
-            'PORT': os.environ.get('DB_PORT', 5432),
-        }
-    }
+}
 
 # ----------------------
 # Validation des mots de passe
